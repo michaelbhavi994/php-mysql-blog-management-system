@@ -15,7 +15,7 @@ Current Status -
 * Local server environment configured
 * Apache and MySQL services running
 * PHP project created
-* Git repository will be initialized
+* Git repository initialized and project uploaded to GitHub
 
 How to Run the Project - 
 1. Install XAMPP.
