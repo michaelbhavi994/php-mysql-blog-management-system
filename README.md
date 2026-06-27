@@ -1,24 +1,38 @@
-**PHP & MySQL Blog Management System**
-This project is being developed as part of my Web Development Internship at ApexPlanet Software Pvt. Ltd.
+# PHP MySQL Blog Management System
+A full-stack web application built with PHP and MySQL as part of my Web Development Internship at ApexPlanet Software Pvt. Ltd.
 
-**Task 1: Development Environment Setup**
+# Features
+- User Registration & Login
+- Secure Password Hashing
+- Session Management
+- Create, Read, Update & Delete (CRUD) Blog Posts
+- MySQL Database Integration
 
-Tools Used - 
-* XAMPP
-* PHP
-* MySQL
-* Visual Studio Code
-* Git
-* GitHub
+# Technologies Used
+- PHP
+- MySQL
+- HTML/CSS
+- XAMPP (Apache + MySQL)
 
-Current Status -
-* Local server environment configured
-* Apache and MySQL services running
-* PHP project created
-* Git repository initialized and project uploaded to GitHub
+# Project Structure
+- `register.php` - User registration page
+- `login.php` - User login page
+- `logout.php` - Session logout
+- `dashboard.php` - User dashboard
+- `create_post.php` - Create new blog post
+- `view_posts.php` - View all posts
+- `edit_post.php` - Edit existing post
+- `delete_post.php` - Delete post
+- `config/` - Database connection
+- `includes/` - Reusable components
 
-How to Run the Project - 
-1. Install XAMPP.
-2. Start Apache and MySQL from the XAMPP Control Panel.
-3. Place the project folder inside `C:\xampp\htdocs\`.
-4. Open `http://localhost/php-mysql-blog-management-system/` in a browser.
+# Setup Instructions
+1. Install XAMPP
+2. Clone this repository into `htdocs` folder
+3. Import the database using phpMyAdmin
+4. Run Apache and MySQL in XAMPP
+5. Open `http://localhost/php-mysql-blog-management-system`
+
+# Internship
+*ApexPlanet Software Pvt. Ltd.*
+Task 2 - CRUD Blog Management System ✅
