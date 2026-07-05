@@ -1,69 +1,110 @@
 <?php
 session_start();
-include "config/database.php";
 
-if (!isset($_SESSION["user_id"])) {
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-$message = "";
+include("config/database.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if (isset($_POST['submit'])) {
 
-    $title = trim($_POST["title"]);
-    $content = trim($_POST["content"]);
+    $title = mysqli_real_escape_string($conn, $_POST['title']);
+    $content = mysqli_real_escape_string($conn, $_POST['content']);
 
-    if (!empty($title) && !empty($content)) {
+    $sql = "INSERT INTO posts(title, content) VALUES('$title','$content')";
 
-        $sql = "INSERT INTO posts (title, content) VALUES ('$title', '$content')";
-
-        if ($conn->query($sql) === TRUE) {
-            $message = "✅ Post created successfully!";
-        } else {
-            $message = "❌ Error: " . $conn->error;
-        }
-
+    if (mysqli_query($conn, $sql)) {
+        echo "<script>
+                alert('Post Published Successfully!');
+                window.location='view_posts.php';
+              </script>";
     } else {
-        $message = "⚠ Please fill in all fields.";
+        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Post</title>
-</head>
+<?php include("includes/header.php"); ?>
 
-<body>
+<div class="container mt-5">
 
-<h2>Create New Blog Post</h2>
+    <div class="row justify-content-center">
 
-<form method="POST">
+        <div class="col-lg-8">
 
-    <label>Title</label><br>
-    <input type="text" name="title" required>
-    <br><br>
+            <div class="card shadow-lg border-0 rounded-4">
 
-    <label>Content</label><br>
-    <textarea name="content" rows="8" cols="50" required></textarea>
-    <br><br>
+                <div class="card-body p-5">
 
-    <button type="submit">Publish Post</button>
+                    <h2 class="text-primary mb-4">
+                        📝 Create New Blog Post
+                    </h2>
 
-</form>
+                    <form method="POST">
 
-<br>
+                        <div class="mb-4">
 
-<p><?php echo $message; ?></p>
+                            <label class="form-label fw-bold">
+                                Blog Title
+                            </label>
 
-<hr>
+                            <input
+                                type="text"
+                                name="title"
+                                class="form-control form-control-lg"
+                                placeholder="Enter your blog title..."
+                                required>
 
-<a href="dashboard.php">⬅ Back to Dashboard</a> |
-<a href="view_posts.php">📄 View All Posts</a>
+                        </div>
 
-</body>
-</html>
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Blog Content
+                            </label>
+
+                            <textarea
+                                name="content"
+                                class="form-control"
+                                rows="8"
+                                placeholder="Write your blog here..."
+                                required></textarea>
+
+                        </div>
+
+                        <div class="d-flex gap-3">
+
+                            <button
+                                type="submit"
+                                name="submit"
+                                class="btn btn-success btn-lg">
+
+                                ✅ Publish Post
+
+                            </button>
+
+                            <a
+                                href="dashboard.php"
+                                class="btn btn-secondary btn-lg">
+
+                                ⬅ Back
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php include("includes/footer.php"); ?>

@@ -7,54 +7,185 @@ if (!isset($_SESSION["user_id"])) {
     exit();
 }
 
-$sql = "SELECT * FROM posts ORDER BY created_at DESC";
-$result = $conn->query($sql);
+$search = "";
+
+if(isset($_GET['search'])){
+    $search = mysqli_real_escape_string($conn,$_GET['search']);
+}
+
+$limit = 5;
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+$start = ($page-1)*$limit;
+
+$countQuery = "SELECT COUNT(*) AS total
+FROM posts
+WHERE title LIKE '%$search%'
+OR content LIKE '%$search%'";
+
+$countResult = mysqli_query($conn,$countQuery);
+
+$totalPosts = mysqli_fetch_assoc($countResult)['total'];
+
+$totalPages = ceil($totalPosts/$limit);
+
+$sql = "SELECT *
+FROM posts
+WHERE title LIKE '%$search%'
+OR content LIKE '%$search%'
+ORDER BY created_at DESC
+LIMIT $start,$limit";
+
+$result = mysqli_query($conn,$sql);
+
+include "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>View Posts</title>
-</head>
+<div class="container mt-4">
 
-<body>
+<div class="card shadow p-4 mb-4">
 
-<h2>All Blog Posts</h2>
+<h2 class="text-primary mb-3">
+📚 Blog Posts
+</h2>
 
-<a href="dashboard.php">⬅ Back to Dashboard</a>
+<form method="GET">
 
-<hr>
+<div class="input-group">
+
+<input
+type="text"
+class="form-control"
+name="search"
+placeholder="Search by title or content..."
+value="<?php echo htmlspecialchars($search); ?>">
+
+<button class="btn btn-primary">
+
+🔍 Search
+
+</button>
+
+</div>
+
+</form>
+
+</div>
 
 <?php
 
-if ($result->num_rows > 0) {
+if(mysqli_num_rows($result)>0){
 
-    while($row = $result->fetch_assoc()) {
+while($row=mysqli_fetch_assoc($result)){
 
-        echo "<h3>".$row['title']."</h3>";
+?>
 
-        echo "<p>".$row['content']."</p>";
+<div class="card shadow mb-4">
 
-        echo "<small>Posted on: ".$row['created_at']."</small>";
+<div class="card-body">
 
-        echo "<br><br>";
+<h3 class="text-primary">
 
-        echo "<a href='edit_post.php?id=".$row['id']."'>✏️ Edit</a>";
+<?php echo htmlspecialchars($row['title']); ?>
 
-        echo " | ";
+</h3>
 
-        echo "<a href='delete_post.php?id=".$row['id']."' onclick=\"return confirm('Delete this post?')\">🗑 Delete</a>";
+<p>
 
-        echo "<hr>";
-    }
+<?php echo nl2br(htmlspecialchars($row['content'])); ?>
 
-} else {
+</p>
 
-    echo "No posts available.";
+<p class="text-muted">
+
+📅 Posted on:
+
+<?php echo $row['created_at']; ?>
+
+</p>
+
+<a
+href="edit_post.php?id=<?php echo $row['id'];?>"
+class="btn btn-warning">
+
+✏ Edit
+
+</a>
+
+<a
+href="delete_post.php?id=<?php echo $row['id'];?>"
+class="btn btn-danger"
+onclick="return confirm('Delete this post?')">
+
+🗑 Delete
+
+</a>
+
+</div>
+
+</div>
+
+<?php
+
+}
+
+}else{
+
+?>
+
+<div class="alert alert-info">
+
+📭 No posts found.
+
+</div>
+
+<?php
 
 }
 
 ?>
 
-</body>
-</html>
+<nav>
+
+<ul class="pagination justify-content-center">
+
+<?php
+
+for($i=1;$i<=$totalPages;$i++){
+
+?>
+
+<li class="page-item <?php if($page==$i) echo 'active';?>">
+
+<a
+class="page-link"
+href="?page=<?php echo $i;?>&search=<?php echo urlencode($search);?>">
+
+<?php echo $i;?>
+
+</a>
+
+</li>
+
+<?php
+
+}
+
+?>
+
+</ul>
+
+</nav>
+
+<a
+href="dashboard.php"
+class="btn btn-secondary">
+
+⬅ Back to Dashboard
+
+</a>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

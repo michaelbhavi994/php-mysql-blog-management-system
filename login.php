@@ -32,31 +32,87 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "User not found!";
     }
 }
+
+include "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
+<div class="row justify-content-center mt-5">
 
-<body>
+    <div class="col-md-5">
 
-<h2>Login</h2>
+        <div class="card shadow-lg p-4">
 
-<form method="POST">
+            <h2 class="text-center text-primary mb-4">
+                🔐 Login
+            </h2>
 
-    Username<br>
-    <input type="text" name="username"><br><br>
+            <?php if($message!=""){ ?>
 
-    Password<br>
-    <input type="password" name="password"><br><br>
+            <div class="alert alert-danger">
+                <?php echo $message; ?>
+            </div>
 
-    <button type="submit">Login</button>
+            <?php } ?>
 
-</form>
+            <form method="POST">
 
-<p><?php echo $message; ?></p>
+                <div class="mb-3">
 
-</body>
-</html>
+                    <label class="form-label">
+                        Username
+                    </label>
+
+                    <input
+                    type="text"
+                    name="username"
+                    class="form-control"
+                    placeholder="Enter username"
+                    required>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Password
+                    </label>
+
+                    <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Enter password"
+                    required>
+
+                </div>
+
+                <button
+                class="btn btn-primary w-100">
+
+                Login
+
+                </button>
+
+            </form>
+
+            <hr>
+
+            <p class="text-center">
+
+                Don't have an account?
+
+                <a href="register.php">
+
+                    Register Here
+
+                </a>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

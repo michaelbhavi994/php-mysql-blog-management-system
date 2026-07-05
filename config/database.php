@@ -13,6 +13,4 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Success message (only for testing)
-echo "Database connected successfully!";
 ?>

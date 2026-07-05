@@ -10,48 +10,125 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (!empty($username) && !empty($password)) {
 
-        // Hash the password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert into database
-        $sql = "INSERT INTO users (username, password)
-                VALUES ('$username', '$hashedPassword')";
+        $sql = "INSERT INTO users(username,password)
+                VALUES('$username','$hashedPassword')";
 
-        if ($conn->query($sql) === TRUE) {
-            $message = "Registration Successful!";
-        } else {
-            $message = "Error: " . $conn->error;
+        if($conn->query($sql)==TRUE){
+
+            $message="Registration Successful!";
+
+        }else{
+
+            $message="Error : ".$conn->error;
+
         }
 
-    } else {
-        $message = "Please fill all fields.";
+    }else{
+
+        $message="Please fill all fields.";
+
     }
+
 }
+
+include "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Registration</title>
-</head>
+<div class="row justify-content-center mt-5">
 
-<body>
+<div class="col-md-5">
 
-<h2>Register</h2>
+<div class="card shadow-lg p-4">
+
+<h2 class="text-center text-success mb-4">
+
+👤 Create Account
+
+</h2>
+
+<?php
+
+if($message!=""){
+
+?>
+
+<div class="alert alert-info">
+
+<?php echo $message; ?>
+
+</div>
+
+<?php
+
+}
+
+?>
 
 <form method="POST">
 
-    <label>Username</label><br>
-    <input type="text" name="username"><br><br>
+<div class="mb-3">
 
-    <label>Password</label><br>
-    <input type="password" name="password"><br><br>
+<label class="form-label">
 
-    <button type="submit">Register</button>
+Username
+
+</label>
+
+<input
+type="text"
+name="username"
+class="form-control"
+placeholder="Choose username"
+required>
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Password
+
+</label>
+
+<input
+type="password"
+name="password"
+class="form-control"
+placeholder="Choose password"
+required>
+
+</div>
+
+<button
+class="btn btn-success w-100">
+
+Create Account
+
+</button>
 
 </form>
 
-<p><?php echo $message; ?></p>
+<hr>
 
-</body>
-</html>
+<p class="text-center">
+
+Already have an account?
+
+<a href="login.php">
+
+Login
+
+</a>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>
