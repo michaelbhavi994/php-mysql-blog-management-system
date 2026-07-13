@@ -1,7 +1,7 @@
-📝 PHP MySQL Blog Management System - 
-A responsive *Blog Management System* developed using PHP and MySQL as part of my *Web Development Internship at ApexPlanet Software Pvt. Ltd.*
+📝 PHP MySQL Blog Management System
+A responsive **Blog Management System** developed using PHP and MySQL as part of my **Web Development Internship at ApexPlanet Software Pvt. Ltd.**
 
-🚀 Features - 
+🚀 Features -
 
 ✅ Task 1 – Basic Web Development
 - Responsive Web Pages
@@ -29,6 +29,16 @@ A responsive *Blog Management System* developed using PHP and MySQL as part of m
 - Delete Confirmation
 - Improved User Experience
 
+✅ Task 4 – Security Enhancements
+- Prepared Statements (SQL Injection Prevention)
+- Server-side Form Validation
+- Client-side Form Validation
+- User Roles (Admin & Editor)
+- Role-Based Access Control
+- XSS Protection using `htmlspecialchars()`
+- Secure Session Authentication
+- Improved Input Validation
+
 🛠️ Technologies Used -
 - PHP
 - MySQL
@@ -38,8 +48,7 @@ A responsive *Blog Management System* developed using PHP and MySQL as part of m
 - JavaScript
 - XAMPP (Apache & MySQL)
 
-# 📂 Project Structure
-
+📂 Project Structure -
 config/
 includes/
 assets/
@@ -55,24 +64,37 @@ edit_post.php
 delete_post.php
 
 ⚙️ Setup Instructions -
+
 1. Install XAMPP.
 2. Clone this repository into the `htdocs` folder.
 3. Create a MySQL database named **blog**.
 4. Import the required tables (`users` and `posts`).
-5. Update database credentials in `config/database.php`.
-6. Start Apache and MySQL from the XAMPP Control Panel.
-7. Open: http://localhost/php-mysql-blog-management-system
+5. Add the `role` column to the `users` table (if not already present).
+6. Update database credentials in `config/database.php`.
+7. Start Apache and MySQL from the XAMPP Control Panel.
+8. Open:
+   ```
+   http://localhost/php-mysql-blog-management-system
+   ```
+🔒 Security Features -
+- SQL Injection Prevention using Prepared Statements
+- Password Hashing with `password_hash()`
+- Password Verification using `password_verify()`
+- Session-Based Authentication
+- Server-side Validation
+- Client-side Validation
+- XSS Protection using `htmlspecialchars()`
+- Role-Based Authorization (Admin & Editor)
 
 📚 Internship Progress -
-
 Organization: ApexPlanet Software Pvt. Ltd.
 
-✅Task 1: Responsive Web Development
+✅ Task 1: Responsive Web Development
+✅ Task 2: CRUD Blog Management System with User Authentication
+✅ Task 3: Advanced Features Implementation (Search, Pagination & UI Improvements)
+✅ Task 4: Security Enhancements (Prepared Statements, Validation & User Roles)
 
-✅Task 2: CRUD Blog Management System with User Authentication
-
-✅Task 3: Advanced Features Implementation (Search, Pagination & UI Improvements)
-
-👩‍💻 Developed By - BHAVI MICHAEL
-B.Tech Computer Science Engineering  
+👩‍💻 Developed By
+**BHAVI MICHAEL**
+B.Tech Computer Science Engineering
 Web Development Intern | ApexPlanet Software Pvt. Ltd.
