@@ -1,38 +1,100 @@
-# PHP MySQL Blog Management System
-A full-stack web application built with PHP and MySQL as part of my Web Development Internship at ApexPlanet Software Pvt. Ltd.
+📝 PHP MySQL Blog Management System
+A responsive **Blog Management System** developed using PHP and MySQL as part of my **Web Development Internship at ApexPlanet Software Pvt. Ltd.**
 
-# Features
-- User Registration & Login
+🚀 Features -
+
+✅ Task 1 – Basic Web Development
+- Responsive Web Pages
+- HTML5 & CSS3
+- Basic JavaScript
+- Clean User Interface
+
+✅ Task 2 – CRUD Application with Authentication
+- User Registration
+- User Login
 - Secure Password Hashing
 - Session Management
-- Create, Read, Update & Delete (CRUD) Blog Posts
+- Create Blog Posts
+- View Blog Posts
+- Edit Blog Posts
+- Delete Blog Posts
 - MySQL Database Integration
 
-# Technologies Used
+✅ Task 3 – Advanced Features
+- Search Posts by Title or Content
+- Pagination
+- Responsive Bootstrap UI
+- Modern Dashboard
+- Professional Navigation Bar
+- Delete Confirmation
+- Improved User Experience
+
+✅ Task 4 – Security Enhancements
+- Prepared Statements (SQL Injection Prevention)
+- Server-side Form Validation
+- Client-side Form Validation
+- User Roles (Admin & Editor)
+- Role-Based Access Control
+- XSS Protection using `htmlspecialchars()`
+- Secure Session Authentication
+- Improved Input Validation
+
+🛠️ Technologies Used -
 - PHP
 - MySQL
-- HTML/CSS
-- XAMPP (Apache + MySQL)
+- HTML5
+- CSS3
+- Bootstrap 5
+- JavaScript
+- XAMPP (Apache & MySQL)
 
-# Project Structure
-- `register.php` - User registration page
-- `login.php` - User login page
-- `logout.php` - Session logout
-- `dashboard.php` - User dashboard
-- `create_post.php` - Create new blog post
-- `view_posts.php` - View all posts
-- `edit_post.php` - Edit existing post
-- `delete_post.php` - Delete post
-- `config/` - Database connection
-- `includes/` - Reusable components
+📂 Project Structure -
+config/
+includes/
+assets/
 
-# Setup Instructions
-1. Install XAMPP
-2. Clone this repository into `htdocs` folder
-3. Import the database using phpMyAdmin
-4. Run Apache and MySQL in XAMPP
-5. Open `http://localhost/php-mysql-blog-management-system`
+index.php
+register.php
+login.php
+logout.php
+dashboard.php
+create_post.php
+view_posts.php
+edit_post.php
+delete_post.php
 
-# Internship
-*ApexPlanet Software Pvt. Ltd.*
-Task 2 - CRUD Blog Management System ✅
+⚙️ Setup Instructions -
+
+1. Install XAMPP.
+2. Clone this repository into the `htdocs` folder.
+3. Create a MySQL database named **blog**.
+4. Import the required tables (`users` and `posts`).
+5. Add the `role` column to the `users` table (if not already present).
+6. Update database credentials in `config/database.php`.
+7. Start Apache and MySQL from the XAMPP Control Panel.
+8. Open:
+   ```
+   http://localhost/php-mysql-blog-management-system
+   ```
+🔒 Security Features -
+- SQL Injection Prevention using Prepared Statements
+- Password Hashing with `password_hash()`
+- Password Verification using `password_verify()`
+- Session-Based Authentication
+- Server-side Validation
+- Client-side Validation
+- XSS Protection using `htmlspecialchars()`
+- Role-Based Authorization (Admin & Editor)
+
+📚 Internship Progress -
+Organization: ApexPlanet Software Pvt. Ltd.
+
+✅ Task 1: Responsive Web Development
+✅ Task 2: CRUD Blog Management System with User Authentication
+✅ Task 3: Advanced Features Implementation (Search, Pagination & UI Improvements)
+✅ Task 4: Security Enhancements (Prepared Statements, Validation & User Roles)
+
+👩‍💻 Developed By
+**BHAVI MICHAEL**
+B.Tech Computer Science Engineering
+Web Development Intern | ApexPlanet Software Pvt. Ltd.
