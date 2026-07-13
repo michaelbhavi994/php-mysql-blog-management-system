@@ -9,35 +9,56 @@ if (!isset($_SESSION["user_id"])) {
 
 $search = "";
 
-if(isset($_GET['search'])){
-    $search = mysqli_real_escape_string($conn,$_GET['search']);
+if (isset($_GET['search'])) {
+    $search = trim($_GET['search']);
 }
 
 $limit = 5;
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
 
-$start = ($page-1)*$limit;
+$start = ($page - 1) * $limit;
 
-$countQuery = "SELECT COUNT(*) AS total
+$searchTerm = "%" . $search . "%";
+
+/* COUNT POSTS */
+
+$countStmt = $conn->prepare("
+SELECT COUNT(*) AS total
 FROM posts
-WHERE title LIKE '%$search%'
-OR content LIKE '%$search%'";
+WHERE title LIKE ?
+OR content LIKE ?
+");
 
-$countResult = mysqli_query($conn,$countQuery);
+$countStmt->bind_param("ss", $searchTerm, $searchTerm);
 
-$totalPosts = mysqli_fetch_assoc($countResult)['total'];
+$countStmt->execute();
 
-$totalPages = ceil($totalPosts/$limit);
+$countResult = $countStmt->get_result();
 
-$sql = "SELECT *
+$totalPosts = $countResult->fetch_assoc()['total'];
+
+$totalPages = ceil($totalPosts / $limit);
+
+$countStmt->close();
+
+
+/* FETCH POSTS */
+
+$stmt = $conn->prepare("
+SELECT *
 FROM posts
-WHERE title LIKE '%$search%'
-OR content LIKE '%$search%'
+WHERE title LIKE ?
+OR content LIKE ?
 ORDER BY created_at DESC
-LIMIT $start,$limit";
+LIMIT ?, ?
+");
 
-$result = mysqli_query($conn,$sql);
+$stmt->bind_param("ssii", $searchTerm, $searchTerm, $start, $limit);
+
+$stmt->execute();
+
+$result = $stmt->get_result();
 
 include "includes/header.php";
 ?>
@@ -59,6 +80,7 @@ type="text"
 class="form-control"
 name="search"
 placeholder="Search by title or content..."
+maxlength="100"
 value="<?php echo htmlspecialchars($search); ?>">
 
 <button class="btn btn-primary">
@@ -66,6 +88,14 @@ value="<?php echo htmlspecialchars($search); ?>">
 🔍 Search
 
 </button>
+
+<a
+href="view_posts.php"
+class="btn btn-secondary">
+
+Reset
+
+</a>
 
 </div>
 
@@ -75,9 +105,9 @@ value="<?php echo htmlspecialchars($search); ?>">
 
 <?php
 
-if(mysqli_num_rows($result)>0){
+if($result->num_rows > 0){
 
-while($row=mysqli_fetch_assoc($result)){
+while($row = $result->fetch_assoc()){
 
 ?>
 
@@ -101,7 +131,7 @@ while($row=mysqli_fetch_assoc($result)){
 
 📅 Posted on:
 
-<?php echo $row['created_at']; ?>
+<?php echo htmlspecialchars($row['created_at']); ?>
 
 </p>
 
@@ -113,6 +143,8 @@ class="btn btn-warning">
 
 </a>
 
+<?php if($_SESSION['role']=="admin"){ ?>
+
 <a
 href="delete_post.php?id=<?php echo $row['id'];?>"
 class="btn btn-danger"
@@ -121,6 +153,8 @@ onclick="return confirm('Delete this post?')">
 🗑 Delete
 
 </a>
+
+<?php } ?>
 
 </div>
 
@@ -156,13 +190,13 @@ for($i=1;$i<=$totalPages;$i++){
 
 ?>
 
-<li class="page-item <?php if($page==$i) echo 'active';?>">
+<li class="page-item <?php if($page==$i) echo 'active'; ?>">
 
 <a
 class="page-link"
-href="?page=<?php echo $i;?>&search=<?php echo urlencode($search);?>">
+href="?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>">
 
-<?php echo $i;?>
+<?php echo $i; ?>
 
 </a>
 
@@ -188,4 +222,10 @@ class="btn btn-secondary">
 
 </div>
 
-<?php include "includes/footer.php"; ?>
+<?php
+
+$stmt->close();
+
+include "includes/footer.php";
+
+?>

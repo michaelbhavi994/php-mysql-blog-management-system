@@ -9,9 +9,12 @@ if (!isset($_SESSION['username'])) {
 include "config/database.php";
 
 // Count total posts
-$result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM posts");
-$row = mysqli_fetch_assoc($result);
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM posts");
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
 $totalPosts = $row['total'];
+$stmt->close();
 
 include "includes/header.php";
 ?>
@@ -30,24 +33,33 @@ include "includes/header.php";
 
     <div class="row text-center mb-4">
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 mb-3">
             <div class="card shadow-sm p-3">
                 <h5>📚 Total Posts</h5>
                 <h2 class="text-primary"><?php echo $totalPosts; ?></h2>
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 mb-3">
             <div class="card shadow-sm p-3">
                 <h5>📅 Today's Date</h5>
                 <p><?php echo date("d M Y"); ?></p>
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
+        <div class="col-md-3 mb-3">
             <div class="card shadow-sm p-3">
                 <h5>👤 Logged In As</h5>
                 <p><?php echo htmlspecialchars($_SESSION['username']); ?></p>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3">
+                <h5>🛡 Role</h5>
+                <p class="fw-bold text-success">
+                    <?php echo ucfirst($_SESSION['role']); ?>
+                </p>
             </div>
         </div>
 

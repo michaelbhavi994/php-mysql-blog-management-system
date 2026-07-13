@@ -1,61 +1,170 @@
 <?php
 session_start();
-include "config/database.php";
 
 if (!isset($_SESSION["user_id"])) {
     header("Location: login.php");
     exit();
 }
 
-$id = $_GET['id'];
+include "config/database.php";
 
-$sql = "SELECT * FROM posts WHERE id=$id";
-$result = $conn->query($sql);
+$message = "";
+
+// Validate ID
+if (!isset($_GET["id"]) || !is_numeric($_GET["id"])) {
+    die("Invalid Post ID.");
+}
+
+$id = (int)$_GET["id"];
+
+// Fetch Post
+$stmt = $conn->prepare("SELECT * FROM posts WHERE id=?");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+
+$result = $stmt->get_result();
+
+if ($result->num_rows == 0) {
+    die("Post not found.");
+}
 
 $post = $result->fetch_assoc();
 
-if($_SERVER["REQUEST_METHOD"]=="POST"){
+$stmt->close();
 
-    $title=$_POST["title"];
-    $content=$_POST["content"];
 
-    $sql="UPDATE posts SET title='$title', content='$content' WHERE id=$id";
+// Update Post
 
-    if($conn->query($sql)){
-        header("Location:view_posts.php");
-        exit();
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $title = trim($_POST["title"]);
+    $content = trim($_POST["content"]);
+
+    if (empty($title) || empty($content)) {
+
+        $message = "Please fill all fields.";
+
+    } elseif (strlen($title) > 150) {
+
+        $message = "Title cannot exceed 150 characters.";
+
+    } else {
+
+        $stmt = $conn->prepare(
+            "UPDATE posts
+            SET title=?, content=?
+            WHERE id=?"
+        );
+
+        $stmt->bind_param("ssi",
+            $title,
+            $content,
+            $id
+        );
+
+        if ($stmt->execute()) {
+
+            header("Location: view_posts.php");
+            exit();
+
+        } else {
+
+            $message = "Unable to update post.";
+
+        }
+
+        $stmt->close();
+
     }
+
 }
+
+include "includes/header.php";
 ?>
 
-<!DOCTYPE html>
-<html>
-<head>
-<title>Edit Post</title>
-</head>
+<div class="container mt-5">
 
-<body>
+<div class="row justify-content-center">
 
-<h2>Edit Blog Post</h2>
+<div class="col-lg-8">
+
+<div class="card shadow-lg p-5">
+
+<h2 class="text-primary mb-4">
+
+✏ Edit Blog Post
+
+</h2>
+
+<?php if($message!=""){ ?>
+
+<div class="alert alert-danger">
+
+<?php echo $message; ?>
+
+</div>
+
+<?php } ?>
 
 <form method="POST">
 
-Title<br>
+<div class="mb-3">
 
-<input type="text" name="title"
-value="<?php echo $post['title']; ?>">
+<label class="form-label">
 
-<br><br>
+Title
 
-Content<br>
+</label>
 
-<textarea name="content" rows="8" cols="50"><?php echo $post['content']; ?></textarea>
+<input
+type="text"
+name="title"
+class="form-control"
+required
+maxlength="150"
+value="<?php echo htmlspecialchars($post['title']); ?>">
 
-<br><br>
+</div>
 
-<button type="submit">Update Post</button>
+<div class="mb-4">
+
+<label class="form-label">
+
+Content
+
+</label>
+
+<textarea
+name="content"
+rows="8"
+class="form-control"
+required><?php echo htmlspecialchars($post['content']); ?></textarea>
+
+</div>
+
+<button
+class="btn btn-success">
+
+Update Post
+
+</button>
+
+<a
+href="view_posts.php"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
 
 </form>
 
-</body>
-</html>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<?php include "includes/footer.php"; ?>

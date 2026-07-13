@@ -8,29 +8,54 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST["username"]);
     $password = trim($_POST["password"]);
 
-    if (!empty($username) && !empty($password)) {
+    // Server-side Validation
+    if (empty($username) || empty($password)) {
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $message = "Please fill all fields.";
 
-        $sql = "INSERT INTO users(username,password)
-                VALUES('$username','$hashedPassword')";
+    } elseif (strlen($username) < 3) {
 
-        if($conn->query($sql)==TRUE){
+        $message = "Username must be at least 3 characters.";
 
-            $message="Registration Successful!";
+    } elseif (strlen($password) < 6) {
 
-        }else{
+        $message = "Password must be at least 6 characters.";
 
-            $message="Error : ".$conn->error;
+    } else {
 
+        // Check if username already exists
+        $check = $conn->prepare("SELECT id FROM users WHERE username = ?");
+        $check->bind_param("s", $username);
+        $check->execute();
+        $check->store_result();
+
+        if ($check->num_rows > 0) {
+
+            $message = "Username already exists.";
+
+        } else {
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Prepared Statement
+            $stmt = $conn->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'editor')");
+            $stmt->bind_param("ss", $username, $hashedPassword);
+
+            if ($stmt->execute()) {
+
+                $message = "Registration Successful! You can now login.";
+
+            } else {
+
+                $message = "Something went wrong.";
+
+            }
+
+            $stmt->close();
         }
 
-    }else{
-
-        $message="Please fill all fields.";
-
+        $check->close();
     }
-
 }
 
 include "includes/header.php";
@@ -48,11 +73,7 @@ include "includes/header.php";
 
 </h2>
 
-<?php
-
-if($message!=""){
-
-?>
+<?php if($message!=""){ ?>
 
 <div class="alert alert-info">
 
@@ -60,11 +81,7 @@ if($message!=""){
 
 </div>
 
-<?php
-
-}
-
-?>
+<?php } ?>
 
 <form method="POST">
 
@@ -81,7 +98,10 @@ type="text"
 name="username"
 class="form-control"
 placeholder="Choose username"
-required>
+required
+minlength="3"
+maxlength="30"
+autocomplete="username">
 
 </div>
 
@@ -98,11 +118,15 @@ type="password"
 name="password"
 class="form-control"
 placeholder="Choose password"
-required>
+required
+minlength="6"
+maxlength="50"
+autocomplete="new-password">
 
 </div>
 
 <button
+type="submit"
 class="btn btn-success w-100">
 
 Create Account

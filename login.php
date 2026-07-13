@@ -9,27 +9,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST["username"]);
     $password = trim($_POST["password"]);
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($sql);
+    // Server-side Validation
+    if (empty($username) || empty($password)) {
+        $message = "Please fill in all fields.";
+    } else {
 
-    if ($result->num_rows == 1) {
+        // Prepared Statement
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
 
-        $user = $result->fetch_assoc();
+        $result = $stmt->get_result();
 
-        if (password_verify($password, $user["password"])) {
+        if ($result->num_rows == 1) {
 
-            $_SESSION["user_id"] = $user["id"];
-            $_SESSION["username"] = $user["username"];
+            $user = $result->fetch_assoc();
 
-            header("Location: dashboard.php");
-            exit();
+            if (password_verify($password, $user["password"])) {
+
+                $_SESSION["user_id"] = $user["id"];
+                $_SESSION["username"] = $user["username"];
+                $_SESSION["role"] = $user["role"];
+
+                header("Location: dashboard.php");
+                exit();
+
+            } else {
+
+                $message = "Incorrect password.";
+
+            }
 
         } else {
-            $message = "Incorrect password!";
+
+            $message = "User not found.";
+
         }
 
-    } else {
-        $message = "User not found!";
+        $stmt->close();
     }
 }
 
@@ -38,80 +55,91 @@ include "includes/header.php";
 
 <div class="row justify-content-center mt-5">
 
-    <div class="col-md-5">
+<div class="col-md-5">
 
-        <div class="card shadow-lg p-4">
+<div class="card shadow-lg p-4">
 
-            <h2 class="text-center text-primary mb-4">
-                🔐 Login
-            </h2>
+<h2 class="text-center text-primary mb-4">
+🔐 Login
+</h2>
 
-            <?php if($message!=""){ ?>
+<?php if($message!=""){ ?>
 
-            <div class="alert alert-danger">
-                <?php echo $message; ?>
-            </div>
+<div class="alert alert-danger">
 
-            <?php } ?>
+<?php echo $message; ?>
 
-            <form method="POST">
+</div>
 
-                <div class="mb-3">
+<?php } ?>
 
-                    <label class="form-label">
-                        Username
-                    </label>
+<form method="POST">
 
-                    <input
-                    type="text"
-                    name="username"
-                    class="form-control"
-                    placeholder="Enter username"
-                    required>
+<div class="mb-3">
 
-                </div>
+<label class="form-label">
 
-                <div class="mb-4">
+Username
 
-                    <label class="form-label">
-                        Password
-                    </label>
+</label>
 
-                    <input
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    placeholder="Enter password"
-                    required>
+<input
+type="text"
+name="username"
+class="form-control"
+placeholder="Enter username"
+required
+maxlength="30"
+autocomplete="username">
 
-                </div>
+</div>
 
-                <button
-                class="btn btn-primary w-100">
+<div class="mb-4">
 
-                Login
+<label class="form-label">
 
-                </button>
+Password
 
-            </form>
+</label>
 
-            <hr>
+<input
+type="password"
+name="password"
+class="form-control"
+placeholder="Enter password"
+required
+minlength="6"
+autocomplete="current-password">
 
-            <p class="text-center">
+</div>
 
-                Don't have an account?
+<button
+type="submit"
+class="btn btn-primary w-100">
 
-                <a href="register.php">
+Login
 
-                    Register Here
+</button>
 
-                </a>
+</form>
 
-            </p>
+<hr>
 
-        </div>
+<p class="text-center">
 
-    </div>
+Don't have an account?
+
+<a href="register.php">
+
+Register Here
+
+</a>
+
+</p>
+
+</div>
+
+</div>
 
 </div>
 

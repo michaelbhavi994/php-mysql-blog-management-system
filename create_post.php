@@ -8,20 +8,44 @@ if (!isset($_SESSION['username'])) {
 
 include("config/database.php");
 
+$message = "";
+
 if (isset($_POST['submit'])) {
 
-    $title = mysqli_real_escape_string($conn, $_POST['title']);
-    $content = mysqli_real_escape_string($conn, $_POST['content']);
+    $title = trim($_POST['title']);
+    $content = trim($_POST['content']);
 
-    $sql = "INSERT INTO posts(title, content) VALUES('$title','$content')";
+    // Server-side Validation
+    if (empty($title) || empty($content)) {
 
-    if (mysqli_query($conn, $sql)) {
-        echo "<script>
-                alert('Post Published Successfully!');
-                window.location='view_posts.php';
-              </script>";
+        $message = "Please fill all fields.";
+
+    } elseif (strlen($title) > 150) {
+
+        $message = "Title cannot exceed 150 characters.";
+
     } else {
-        echo "<div class='alert alert-danger'>Error: " . mysqli_error($conn) . "</div>";
+
+        // Prepared Statement
+        $stmt = $conn->prepare("INSERT INTO posts (title, content) VALUES (?, ?)");
+
+        $stmt->bind_param("ss", $title, $content);
+
+        if ($stmt->execute()) {
+
+            echo "<script>
+                    alert('Post Published Successfully!');
+                    window.location='view_posts.php';
+                  </script>";
+            exit();
+
+        } else {
+
+            $message = "Something went wrong.";
+
+        }
+
+        $stmt->close();
     }
 }
 ?>
@@ -42,6 +66,16 @@ if (isset($_POST['submit'])) {
                         📝 Create New Blog Post
                     </h2>
 
+                    <?php if($message!=""){ ?>
+
+                    <div class="alert alert-danger">
+
+                        <?php echo $message; ?>
+
+                    </div>
+
+                    <?php } ?>
+
                     <form method="POST">
 
                         <div class="mb-4">
@@ -55,7 +89,8 @@ if (isset($_POST['submit'])) {
                                 name="title"
                                 class="form-control form-control-lg"
                                 placeholder="Enter your blog title..."
-                                required>
+                                required
+                                maxlength="150">
 
                         </div>
 
