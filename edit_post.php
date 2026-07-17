@@ -34,12 +34,12 @@ $stmt->close();
 
 
 // Update Post
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $title = trim($_POST["title"]);
     $content = trim($_POST["content"]);
 
+    // Server-side Validation
     if (empty($title) || empty($content)) {
 
         $message = "Please fill all fields.";
@@ -48,15 +48,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $message = "Title cannot exceed 150 characters.";
 
+    } elseif (strlen($content) > 1000) {
+
+        $message = "Content cannot exceed 1000 characters.";
+
     } else {
 
+        // Prepared Statement
         $stmt = $conn->prepare(
             "UPDATE posts
             SET title=?, content=?
             WHERE id=?"
         );
 
-        $stmt->bind_param("ssi",
+        $stmt->bind_param(
+            "ssi",
             $title,
             $content,
             $id
@@ -74,9 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         $stmt->close();
-
     }
-
 }
 
 include "includes/header.php";
@@ -84,86 +88,95 @@ include "includes/header.php";
 
 <div class="container mt-5">
 
-<div class="row justify-content-center">
+    <div class="row justify-content-center">
 
-<div class="col-lg-8">
+        <div class="col-lg-8">
 
-<div class="card shadow-lg p-5">
+            <div class="card shadow-lg p-5">
 
-<h2 class="text-primary mb-4">
+                <h2 class="text-primary mb-4">
 
-✏ Edit Blog Post
+                    ✏ Edit Blog Post
 
-</h2>
+                </h2>
 
-<?php if($message!=""){ ?>
+                <?php if($message!=""){ ?>
 
-<div class="alert alert-danger">
+                <div class="alert alert-danger">
 
-<?php echo $message; ?>
+                    <?php echo htmlspecialchars($message); ?>
 
-</div>
+                </div>
 
-<?php } ?>
+                <?php } ?>
 
-<form method="POST">
+                <form method="POST">
 
-<div class="mb-3">
+                    <div class="mb-3">
 
-<label class="form-label">
+                        <label class="form-label">
 
-Title
+                            Title
 
-</label>
+                        </label>
 
-<input
-type="text"
-name="title"
-class="form-control"
-required
-maxlength="150"
-value="<?php echo htmlspecialchars($post['title']); ?>">
+                        <input
+                        type="text"
+                        name="title"
+                        class="form-control"
+                        required
+                        maxlength="150"
+                        value="<?php echo htmlspecialchars($post['title']); ?>">
 
-</div>
+                        <small class="text-muted">
+                            Maximum 150 characters
+                        </small>
 
-<div class="mb-4">
+                    </div>
 
-<label class="form-label">
+                    <div class="mb-4">
 
-Content
+                        <label class="form-label">
 
-</label>
+                            Content
 
-<textarea
-name="content"
-rows="8"
-class="form-control"
-required><?php echo htmlspecialchars($post['content']); ?></textarea>
+                        </label>
 
-</div>
+                        <textarea
+                        name="content"
+                        rows="8"
+                        class="form-control"
+                        required
+                        maxlength="1000"><?php echo htmlspecialchars($post['content']); ?></textarea>
 
-<button
-class="btn btn-success">
+                        <small class="text-muted">
+                            Maximum 1000 characters
+                        </small>
 
-Update Post
+                    </div>
 
-</button>
+                    <button
+                    class="btn btn-success">
 
-<a
-href="view_posts.php"
-class="btn btn-secondary">
+                        ✅ Update Post
 
-Cancel
+                    </button>
 
-</a>
+                    <a
+                    href="view_posts.php"
+                    class="btn btn-secondary">
 
-</form>
+                        Cancel
 
-</div>
+                    </a>
 
-</div>
+                </form>
 
-</div>
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

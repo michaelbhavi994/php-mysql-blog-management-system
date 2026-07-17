@@ -24,6 +24,10 @@ if (isset($_POST['submit'])) {
 
         $message = "Title cannot exceed 150 characters.";
 
+    } elseif (strlen($content) > 1000) {
+
+        $message = "Content cannot exceed 1000 characters.";
+
     } else {
 
         // Prepared Statement
@@ -41,7 +45,7 @@ if (isset($_POST['submit'])) {
 
         } else {
 
-            $message = "Something went wrong.";
+            $message = "Something went wrong. Please try again.";
 
         }
 
@@ -70,7 +74,7 @@ if (isset($_POST['submit'])) {
 
                     <div class="alert alert-danger">
 
-                        <?php echo $message; ?>
+                        <?php echo htmlspecialchars($message); ?>
 
                     </div>
 
@@ -92,6 +96,10 @@ if (isset($_POST['submit'])) {
                                 required
                                 maxlength="150">
 
+                            <small class="text-muted">
+                                Maximum 150 characters
+                            </small>
+
                         </div>
 
                         <div class="mb-4">
@@ -105,7 +113,12 @@ if (isset($_POST['submit'])) {
                                 class="form-control"
                                 rows="8"
                                 placeholder="Write your blog here..."
-                                required></textarea>
+                                required
+                                maxlength="1000"></textarea>
+
+                            <small class="text-muted">
+                                Maximum 1000 characters
+                            </small>
 
                         </div>
 
