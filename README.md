@@ -1,8 +1,7 @@
 📝 PHP MySQL Blog Management System
 A responsive **Blog Management System** developed using PHP and MySQL as part of my **Web Development Internship at ApexPlanet Software Pvt. Ltd.**
 
-🚀 Features -
-
+🚀 Features
 ✅ Task 1 – Basic Web Development
 - Responsive Web Pages
 - HTML5 & CSS3
@@ -39,6 +38,15 @@ A responsive **Blog Management System** developed using PHP and MySQL as part of
 - Secure Session Authentication
 - Improved Input Validation
 
+✅ Task 5 – Final Project & Testing
+- Integrated All Features into a Single Application
+- Functional Testing
+- Usability Testing
+- Security Testing
+- Bug Fixes & Debugging
+- Final UI Polish
+- Production-Ready Project Structure
+
 🛠️ Technologies Used -
 - PHP
 - MySQL
@@ -48,7 +56,8 @@ A responsive **Blog Management System** developed using PHP and MySQL as part of
 - JavaScript
 - XAMPP (Apache & MySQL)
 
-📂 Project Structure -
+📂 Project Structure
+
 config/
 includes/
 assets/
@@ -63,8 +72,7 @@ view_posts.php
 edit_post.php
 delete_post.php
 
-⚙️ Setup Instructions -
-
+⚙️ Setup Instructions
 1. Install XAMPP.
 2. Clone this repository into the `htdocs` folder.
 3. Create a MySQL database named **blog**.
@@ -73,28 +81,50 @@ delete_post.php
 6. Update database credentials in `config/database.php`.
 7. Start Apache and MySQL from the XAMPP Control Panel.
 8. Open:
-   ```
-   http://localhost/php-mysql-blog-management-system
-   ```
-🔒 Security Features -
+
+```
+http://localhost/php-mysql-blog-management-system
+```
+
+---
+
+🔒 Security Features
 - SQL Injection Prevention using Prepared Statements
 - Password Hashing with `password_hash()`
 - Password Verification using `password_verify()`
 - Session-Based Authentication
-- Server-side Validation
-- Client-side Validation
+- Server-side Form Validation
+- Client-side Form Validation
 - XSS Protection using `htmlspecialchars()`
 - Role-Based Authorization (Admin & Editor)
+- Secure User Input Handling
 
-📚 Internship Progress -
-Organization: ApexPlanet Software Pvt. Ltd.
+🧪 Testing Performed
+- ✅ User Registration Testing
+- ✅ User Login & Logout Testing
+- ✅ CRUD Operations Testing
+- ✅ Search Functionality Testing
+- ✅ Pagination Testing
+- ✅ Role-Based Access Testing
+- ✅ Form Validation Testing
+- ✅ SQL Injection Prevention Testing
+- ✅ XSS Protection Testing
+- ✅ Session Authentication Testing
 
-✅ Task 1: Responsive Web Development
-✅ Task 2: CRUD Blog Management System with User Authentication
-✅ Task 3: Advanced Features Implementation (Search, Pagination & UI Improvements)
-✅ Task 4: Security Enhancements (Prepared Statements, Validation & User Roles)
+---
+
+📚 Internship Progress
+**Organization:** ApexPlanet Software Pvt. Ltd.
+
+- ✅ Task 1: Responsive Web Development
+- ✅ Task 2: CRUD Blog Management System with User Authentication
+- ✅ Task 3: Advanced Features Implementation (Search, Pagination & UI Improvements)
+- ✅ Task 4: Security Enhancements (Prepared Statements, Validation & User Roles)
+- ✅ Task 5: Final Project Integration, Testing & Debugging
 
 👩‍💻 Developed By
 **BHAVI MICHAEL**
+
 B.Tech Computer Science Engineering
+
 Web Development Intern | ApexPlanet Software Pvt. Ltd.
